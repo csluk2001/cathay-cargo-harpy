@@ -44,7 +44,7 @@ export type RateRow = {
   destination: string;
   solution: string;
   weightBreak: string;
-  rate: string;
+  factor: string;
   effectiveDate: string;
 };
 
@@ -140,19 +140,19 @@ const columns: ColumnDef<RateRow>[] = [
     cell: ({ row }) => <div>{row.getValue("weightBreak")}</div>,
   },
   {
-    accessorKey: "rate",
+    accessorKey: "factor",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Rate
+          Factor
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("rate")}</div>,
+    cell: ({ row }) => <div>{row.getValue("factor")}</div>,
   },
   {
     id: "actions",
@@ -185,7 +185,8 @@ const columns: ColumnDef<RateRow>[] = [
   },
 ];
 import { useRouter } from "next/navigation";
-export default function StandardRateTable() {
+
+export default function RateRationaleTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -194,7 +195,7 @@ export default function StandardRateTable() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const data = useUploadedCsvStore((state) => state.sheetRowData); // Connecting to the Zustand store
+  const data = useUploadedCsvStore((state) => state.rateRationaleRowData); // Connecting to the Zustand store
 
   const table = useReactTable({
     data,
@@ -214,7 +215,6 @@ export default function StandardRateTable() {
       rowSelection,
     },
   });
-
   const router = useRouter();
 
   // Navigation options and handler
