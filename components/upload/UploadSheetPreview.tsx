@@ -8,13 +8,13 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { useUploadedExcelStore } from "@/store/useUploadedExcelStore";
+import useUploadedCsvStore from "@/store/useUploadedCsvStore";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 
 export default function UploadSheetPreview() {
-	const excelNameSet = useUploadedExcelStore((state) => state.excelNameSet);
-	const status = useUploadedExcelStore((state) => state.status);
+	const sheetNameArray = useUploadedCsvStore((state) => state.sheetNameArray);
+	const status = useUploadedCsvStore((state) => state.status);
 
 	const router = useRouter();
 	return (
@@ -32,10 +32,10 @@ export default function UploadSheetPreview() {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{excelNameSet.map((excelName, index) => (
-						<TableRow key={excelName}>
+					{sheetNameArray.map((sheetName, index) => (
+						<TableRow key={sheetName}>
 							<TableCell className="font-medium">
-								{excelName}
+								{sheetName}
 							</TableCell>
 							<TableCell>{status[index]}</TableCell>
 						</TableRow>
@@ -44,7 +44,7 @@ export default function UploadSheetPreview() {
 				<TableFooter>
 					<TableRow>
 						<TableCell colSpan={1}>Total Files</TableCell>
-						<TableCell>{excelNameSet.length}</TableCell>
+						<TableCell>{sheetNameArray.length}</TableCell>
 					</TableRow>
 				</TableFooter>
 			</Table>

@@ -2,16 +2,18 @@
 
 import UploadDropBox from "@/components/upload/UploadDropBox";
 import UploadSheetPreview from "@/components/upload/UploadSheetPreview";
-import { useUploadedExcelStore } from "@/store/useUploadedExcelStore";
+import useUploadedCsvStore from "@/store/useUploadedCsvStore";
 import { useEffect, useState } from "react";
 
 export default function LoginPage() {
-	const excelNameSet = useUploadedExcelStore((state) => state.excelNameSet);
-	const [isPreview, setIsPreview] = useState(excelNameSet.length > 0);
+	const sheetNameArray = useUploadedCsvStore((state) => state.sheetNameArray);
+	const [isPreview, setIsPreview] = useState(sheetNameArray.length > 0);
 
 	useEffect(() => {
-		setIsPreview(excelNameSet.length > 0);
-	}, [excelNameSet.length]);
+		// Debug
+		// console.log(sheetNameArray.length > 0);
+		setIsPreview(sheetNameArray.length > 0);
+	}, [sheetNameArray.length]);
 
 	return (
 		<div className="grid min-h-svh lg:grid-cols-2">

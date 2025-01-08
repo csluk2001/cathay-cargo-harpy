@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import ShaExcelHanlder from "@/utils/ShaExcelHandler";
+import ExcelHandler from "@/utils/ExcelHandler";
 
 export default function UploadDropBox() {
 	const [file, setFile] = useState<File | null>(null); // State to store the dropped file
@@ -38,7 +38,7 @@ export default function UploadDropBox() {
 	const handleUpload = useCallback(() => {
 		if (file) {
 			console.log("[Upload Page] | Processing file:", file.name);
-			ShaExcelHanlder.readExcelData(file); // Call the Zustand function to process the file
+			ExcelHandler.readExcelData(file); // Call the Zustand function to process the file
 			alert("File uploaded successfully!");
 			setFile(null); // Clear the file after processing
 			setFileName(null); // Clear the file name after processing

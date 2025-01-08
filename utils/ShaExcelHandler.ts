@@ -4,7 +4,7 @@ import ShaStandardRateHandler from "./ShaStandardRateHandler";
 import { useStandardRateStore } from "@/store/useStandardRateStore";
 import { useUploadedExcelStore } from "@/store/useUploadedExcelStore";
 
-export default class ShaExcelHanlder {
+export default class ShaExcelHandler {
 	static readExcelData(file: File) {
 		// Data storage
 		let standardRateRawData: StandardRateRawData;
@@ -113,7 +113,7 @@ export default class ShaExcelHanlder {
 		const pricing: Record<string, any>[] = [];
 
 		let solutionCounter = 0;
-		jsonData = ShaExcelHanlder.cleanStandardRateSheet(jsonData);
+		jsonData = ShaExcelHandler.cleanStandardRateSheet(jsonData);
 
 		// Read each row
 		for (const row of jsonData) {
