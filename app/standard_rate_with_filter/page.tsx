@@ -2,8 +2,10 @@
 
 import * as React from 'react';
 import {
+	Column,
 	ColumnDef,
 	ColumnFiltersState,
+	RowData,
 	SortingState,
 	VisibilityState,
 	flexRender,
@@ -13,6 +15,14 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from '@tanstack/react-table';
+
+declare module '@tanstack/react-table' {
+	//allows us to define custom properties for our columns
+	interface ColumnMeta<TData extends RowData, TValue> {
+		filterVariant: 'select';
+	}
+}
+
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -44,7 +54,7 @@ export type RateRow = {
 	destination: string;
 	solution: string;
 	weightBreak: string;
-	factor: string;
+	rate: string;
 	effectiveDate: string;
 };
 
@@ -152,7 +162,7 @@ const columns: ColumnDef<RateRow>[] = [
 		cell: ({ row }) => <div>{row.getValue('weightBreak')}</div>,
 	},
 	{
-		accessorKey: 'factor',
+		accessorKey: 'rate',
 		header: ({ column }) => {
 			return (
 				<Button
@@ -161,25 +171,64 @@ const columns: ColumnDef<RateRow>[] = [
 						column.toggleSorting(column.getIsSorted() === 'asc')
 					}
 				>
-					Factor
+					Rate
 					<ArrowUpDown />
 				</Button>
 			);
 		},
-		cell: ({ row }) => <div>{row.getValue('factor')}</div>,
+		cell: ({ row }) => <div>{row.getValue('rate')}</div>,
+	},
+	{
+		id: 'actions',
+		enableHiding: false,
+		cell: ({ row }) => {
+			const standardRate = row.original;
+
+			return (
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button
+							variant="ghost"
+							className="h-8 w-8 p-0"
+						>
+							<span className="sr-only">Open menu</span>
+							<MoreHorizontal />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						<DropdownMenuLabel>Actions</DropdownMenuLabel>
+						<DropdownMenuItem
+							onClick={() =>
+								navigator.clipboard.writeText(standardRate.id)
+							}
+						>
+							Copy payment ID
+						</DropdownMenuItem>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem>View customer</DropdownMenuItem>
+						<DropdownMenuItem>
+							View payment details
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			);
+		},
 	},
 ];
 import { useRouter } from 'next/navigation';
-
-export default function RateRationaleTable() {
+import { Input } from '@/components/ui/input';
+export default function StandardRateTable() {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
+
 	const [columnFilters, setColumnFilters] =
 		React.useState<ColumnFiltersState>([]);
+
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
+
 	const [rowSelection, setRowSelection] = React.useState({});
 
-	const data = useUploadedCsvStore((state) => state.rateRationaleRowData); // Connecting to the Zustand store
+	const data = useUploadedCsvStore((state) => state.sheetRowData); // Connecting to the Zustand store
 
 	const table = useReactTable({
 		data,
@@ -199,16 +248,14 @@ export default function RateRationaleTable() {
 			rowSelection,
 		},
 	});
+
 	const router = useRouter();
 
 	// Navigation options and handler
 	const options = [
 		{ label: 'Standard Rate', link: '/standard_rate' },
 		{ label: 'Standard Rate Formula', link: '/standard_rate_formula' },
-		{
-			label: 'Standard Rate With Filters',
-			link: '/standard_rate_with_filter',
-		},
+		{ label: 'Rate Rationale', link: '/rate_rationale' },
 	];
 
 	const handleNavigation = (link: string) => {
@@ -278,6 +325,29 @@ export default function RateRationaleTable() {
 															.header,
 														header.getContext()
 													)}
+											<div className="w-24 flex justify-center">
+												<Input
+													placeholder="Filter."
+													value={
+														(table
+															.getColumn(
+																header.id
+															)
+															?.getFilterValue() as string) ??
+														''
+													}
+													onChange={(event) =>
+														table
+															.getColumn(
+																header.id
+															)
+															?.setFilterValue(
+																event.target
+																	.value
+															)
+													}
+												/>
+											</div>
 										</TableHead>
 									);
 								})}
