@@ -67,7 +67,7 @@ export default class ShaExcelHandler {
               // console.log(standardRateTable);
 
               // Debug use
-              console.log(standardRateOneLine);
+              // console.log(standardRateOneLine);
 
               // Update State Management
               const updatestandardRateCompactData =
