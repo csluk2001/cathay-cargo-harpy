@@ -187,7 +187,7 @@ export default function RateRationaleTable() {
     },
     {
       label: "OD Relationship",
-      link: "/od_relationship ",
+      link: "/visualization/od_relationship ",
     },
   ];
 

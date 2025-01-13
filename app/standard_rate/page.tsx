@@ -289,7 +289,7 @@ export default function StandardRateTable() {
 		},
 		{
 			label: "OD Relationship",
-			link: "/od_relationship ",
+			link: "/visualization/od_relationship ",
 		},
 	];
 
